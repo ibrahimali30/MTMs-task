@@ -48,7 +48,6 @@ class SearchFragment: Fragment() {
         initSearchView()
         initRecyclerView()
         getPlaces("")
-        (activity as MapsActivity).viewTopSpacing.gone()
     }
 
     private fun initSearchView() {
@@ -102,10 +101,6 @@ class SearchFragment: Fragment() {
         adapter.setList(data)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        (activity as MapsActivity).viewTopSpacing.show()
-    }
 
     
     

@@ -1,6 +1,7 @@
 package com.ibrahim.mtms_task.places.presentation.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -12,6 +13,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.ibrahim.mtms_task.R
+import com.ibrahim.mtms_task.base.extensions.gone
+import com.ibrahim.mtms_task.base.extensions.show
 import com.ibrahim.mtms_task.places.presentation.fragment.SearchFragment
 import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,10 +40,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         initViews()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initViews() {
-        btMenuToggle.setOnClickListener {
-            drawer_layout.openDrawer(Gravity.LEFT)
-        }
 
         etSourceLocation.setOnTouchListener { v, event ->
             showSearchFragment()
@@ -59,7 +60,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             sharedViewModel.onQueryTextChanged(it.toString())
         }
 
-
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount > 0){
+                viewTopSpacing.gone()
+                btMenuToggle.setIconResource(R.drawable.ic_baseline_arrow_back_24)
+                btMenuToggle.setOnClickListener {
+                    supportFragmentManager.popBackStack()
+                }
+            }else{
+                viewTopSpacing.show()
+                btMenuToggle.setIconResource(R.drawable.ic_baseline_menu_24)
+                btMenuToggle.setOnClickListener {
+                    drawer_layout.openDrawer(Gravity.LEFT)
+                }
+            }
+        }
     }
 
     private fun showSearchFragment() {
