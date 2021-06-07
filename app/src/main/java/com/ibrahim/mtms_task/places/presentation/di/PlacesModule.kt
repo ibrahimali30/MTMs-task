@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.places.di
+package com.ibrahim.mtms_task.places.presentation.di
 
 
 import com.ibrahim.mtms_task.places.data.repository.PlacesRepositoryImpl

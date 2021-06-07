@@ -1,6 +1,6 @@
 package com.ibrahim.mtms_task.model
 
-data class LocationModel(
+data class PlaceUiModel(
         val name: String,
         val lat: Double,
         val lon: Double,

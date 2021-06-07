@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.view.adapter
+package com.ibrahim.mtms_task.places.presentation.adapter
 
 
 import android.view.LayoutInflater
@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ibrahim.mtms_task.R
-import com.ibrahim.mtms_task.model.LocationModel
+import com.ibrahim.mtms_task.model.PlaceUiModel
 import kotlinx.android.synthetic.main.item_location_search.view.*
 
 
 class SearchAdapter(
-    val data: ArrayList<LocationModel>,
-    val onItemClicked: (location: LocationModel) -> Unit
+    val data: ArrayList<PlaceUiModel>,
+    val onItemClicked: (location: PlaceUiModel) -> Unit
 ) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     var searchQuery = ""
@@ -41,7 +41,7 @@ class SearchAdapter(
 
     }
 
-    fun setList(list: List<LocationModel>) {
+    fun setList(list: List<PlaceUiModel>) {
         data.addAll(list)
         notifyDataSetChanged()
     }
@@ -53,7 +53,7 @@ class SearchAdapter(
 
     class ViewHolder constructor(val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(model: LocationModel) {
+        fun bind(model: PlaceUiModel) {
             view.tvPlace.text = model.name
 
         }

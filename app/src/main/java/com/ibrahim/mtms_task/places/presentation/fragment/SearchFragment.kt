@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.view.fragment
+package com.ibrahim.mtms_task.places.presentation.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ibrahim.mtms_task.R
 import com.ibrahim.mtms_task.base.extensions.gone
 import com.ibrahim.mtms_task.base.extensions.show
-import com.ibrahim.mtms_task.model.LocationModel
-import com.ibrahim.mtms_task.places.viewmodel.PlacesAnysViewModel
-import com.ibrahim.mtms_task.view.MapsActivity
-import com.ibrahim.mtms_task.view.adapter.SearchAdapter
-import com.ibrahim.mtms_task.viewmodel.SharedViewModel
+import com.ibrahim.mtms_task.model.PlaceUiModel
+import com.ibrahim.mtms_task.places.presentation.viewmodel.PlacesViewModel
+import com.ibrahim.mtms_task.places.presentation.view.MapsActivity
+import com.ibrahim.mtms_task.places.presentation.adapter.SearchAdapter
+import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.layout_top_views.*
@@ -27,9 +27,9 @@ import javax.inject.Inject
 class SearchFragment: Fragment() {
 
     @Inject
-    lateinit var viewModel : PlacesAnysViewModel
+    lateinit var viewModel : PlacesViewModel
 
-    val locationsSharedViewModel by lazy {
+    val sharedViewModel by lazy {
         ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
 
@@ -47,22 +47,19 @@ class SearchFragment: Fragment() {
         observeScreenState()
         initSearchView()
         initRecyclerView()
-        viewModel.getSourceLocations("")
+        getPlaces("")
         (activity as MapsActivity).viewTopSpacing.gone()
     }
 
     private fun initSearchView() {
-        locationsSharedViewModel.searchQueryLiveData.observe(viewLifecycleOwner , Observer {
-            onSearchQueryChanged(it)
+        sharedViewModel.searchQueryLiveData.observe(viewLifecycleOwner , Observer {
+            getPlaces(it)
         })
     }
 
-    private fun onSearchQueryChanged(it: String?) {
-        it ?: return
+    private fun getPlaces(query: String) {
         adapter.clear()
-        adapter.searchQuery = it
-        if (it.isNotEmpty())
-            viewModel.getSourceLocations("it")
+        viewModel.getSourceLocations(query)
     }
 
     private fun initRecyclerView() {
@@ -71,7 +68,7 @@ class SearchFragment: Fragment() {
         rvSearchResult.adapter = adapter
     }
 
-    private fun onItemClicked(location: LocationModel) {
+    private fun onItemClicked(location: PlaceUiModel) {
 
     }
 
@@ -83,14 +80,14 @@ class SearchFragment: Fragment() {
     }
 
 
-    private fun onScreenStateChanged(state: PlacesAnysViewModel.ScreenState?) {
+    private fun onScreenStateChanged(state: PlacesViewModel.ScreenState?) {
         when (state) {
-            is PlacesAnysViewModel.ScreenState.SuccessAPIResponse -> handleSuccess(state.data)
-            is PlacesAnysViewModel.ScreenState.ErrorLoadingFromApi -> handleErrorLoadingFromApi(state.error)
+            is PlacesViewModel.ScreenState.SuccessAPIResponse -> handleSuccess(state.data)
+            is PlacesViewModel.ScreenState.ErrorLoadingFromApi -> handleErrorLoadingFromApi(state.error)
             else -> {}
         }
 
-        handleLoadingVisibility(state == PlacesAnysViewModel.ScreenState.Loading)
+        handleLoadingVisibility(state == PlacesViewModel.ScreenState.Loading)
     }
 
     private fun handleErrorLoadingFromApi(error: Throwable) {
@@ -101,7 +98,7 @@ class SearchFragment: Fragment() {
         progressBar.visibility = if (showLoading) View.VISIBLE else View.GONE
     }
 
-    private fun handleSuccess(data: List<LocationModel>) {
+    private fun handleSuccess(data: List<PlaceUiModel>) {
         adapter.setList(data)
     }
 

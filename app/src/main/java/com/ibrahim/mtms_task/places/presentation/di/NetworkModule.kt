@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.places.di
+package com.ibrahim.mtms_task.places.presentation.di
 
 import com.google.gson.GsonBuilder
 import dagger.Module
