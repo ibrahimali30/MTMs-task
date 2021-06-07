@@ -12,10 +12,10 @@ import com.ibrahim.mtms_task.R
 import com.ibrahim.mtms_task.base.extensions.gone
 import com.ibrahim.mtms_task.base.extensions.show
 import com.ibrahim.mtms_task.model.LocationModel
+import com.ibrahim.mtms_task.places.viewmodel.PlacesAnysViewModel
 import com.ibrahim.mtms_task.view.MapsActivity
 import com.ibrahim.mtms_task.view.adapter.SearchAdapter
 import com.ibrahim.mtms_task.viewmodel.SharedViewModel
-import com.ibrahim.mtms_task.viewmodel.SearchLocationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.layout_top_views.*
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class SearchFragment: Fragment() {
 
     @Inject
-    lateinit var viewModel : SearchLocationsViewModel
+    lateinit var viewModel : PlacesAnysViewModel
 
     val locationsSharedViewModel by lazy {
         ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
@@ -62,7 +62,7 @@ class SearchFragment: Fragment() {
         adapter.clear()
         adapter.searchQuery = it
         if (it.isNotEmpty())
-            viewModel.getSourceLocations(it)
+            viewModel.getSourceLocations("it")
     }
 
     private fun initRecyclerView() {
@@ -83,14 +83,14 @@ class SearchFragment: Fragment() {
     }
 
 
-    private fun onScreenStateChanged(state: SearchLocationsViewModel.SearchScreenState?) {
+    private fun onScreenStateChanged(state: PlacesAnysViewModel.ScreenState?) {
         when (state) {
-            is SearchLocationsViewModel.SearchScreenState.SuccessAPIResponse -> handleSuccess(state.data)
-            is SearchLocationsViewModel.SearchScreenState.ErrorLoadingFromApi -> handleErrorLoadingFromApi(state.error)
+            is PlacesAnysViewModel.ScreenState.SuccessAPIResponse -> handleSuccess(state.data)
+            is PlacesAnysViewModel.ScreenState.ErrorLoadingFromApi -> handleErrorLoadingFromApi(state.error)
             else -> {}
         }
 
-        handleLoadingVisibility(state == SearchLocationsViewModel.SearchScreenState.Loading)
+        handleLoadingVisibility(state == PlacesAnysViewModel.ScreenState.Loading)
     }
 
     private fun handleErrorLoadingFromApi(error: Throwable) {
