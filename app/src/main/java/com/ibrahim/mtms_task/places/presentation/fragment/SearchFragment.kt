@@ -9,22 +9,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ibrahim.mtms_task.R
-import com.ibrahim.mtms_task.base.extensions.gone
-import com.ibrahim.mtms_task.base.extensions.show
 import com.ibrahim.mtms_task.model.PlaceUiModel
 import com.ibrahim.mtms_task.places.presentation.viewmodel.PlacesViewModel
-import com.ibrahim.mtms_task.places.presentation.view.MapsActivity
 import com.ibrahim.mtms_task.places.presentation.adapter.SearchAdapter
 import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.layout_top_views.*
 import java.util.ArrayList
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SearchFragment: Fragment() {
+abstract class SearchFragment: Fragment() {
 
     @Inject
     lateinit var viewModel : PlacesViewModel
@@ -33,7 +29,7 @@ class SearchFragment: Fragment() {
         ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
     }
 
-    private lateinit var adapter: SearchAdapter
+    lateinit var adapter: SearchAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,10 +52,8 @@ class SearchFragment: Fragment() {
         })
     }
 
-    private fun getPlaces(query: String) {
-        adapter.clear()
-        viewModel.getSourceLocations(query)
-    }
+    abstract fun getPlaces(query: String)
+    abstract fun onItemClicked(location: PlaceUiModel)
 
     private fun initRecyclerView() {
         adapter = SearchAdapter(ArrayList(), ::onItemClicked)
@@ -67,9 +61,6 @@ class SearchFragment: Fragment() {
         rvSearchResult.adapter = adapter
     }
 
-    private fun onItemClicked(location: PlaceUiModel) {
-
-    }
 
 
     private fun observeScreenState() {

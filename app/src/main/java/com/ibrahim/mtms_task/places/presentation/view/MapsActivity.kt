@@ -1,25 +1,34 @@
 package com.ibrahim.mtms_task.places.presentation.view
 
 import android.Manifest
+import android.R.attr.*
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.ibrahim.mtms_task.R
 import com.ibrahim.mtms_task.base.extensions.gone
+import com.ibrahim.mtms_task.base.extensions.setViewMargin
 import com.ibrahim.mtms_task.base.extensions.show
-import com.ibrahim.mtms_task.places.presentation.fragment.SearchFragment
+import com.ibrahim.mtms_task.places.presentation.fragment.DestinationSearchFragment
+import com.ibrahim.mtms_task.places.presentation.fragment.SourceSearchFragment
 import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.layout_top_views.*
+
 
 @AndroidEntryPoint
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -31,6 +40,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -38,17 +48,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         initViews()
+        initObservers()
+
+
+    }
+
+    private fun initObservers() {
+        sharedViewModel.selectedDestinationLiveData.observe(this, Observer {
+            etDestinationLocation.setText(it.name)
+        })
+
+        sharedViewModel.selectedSourceLiveData.observe(this, Observer {
+            etSourceLocation.setText(it.name)
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initViews() {
 
         etSourceLocation.setOnTouchListener { v, event ->
-            showSearchFragment()
+            showSearchFragment(SourceSearchFragment())
             return@setOnTouchListener false
         }
             etDestinationLocation.setOnTouchListener { v, event ->
-            showSearchFragment()
+                showSearchFragment(DestinationSearchFragment())
                 return@setOnTouchListener false
         }
 
@@ -60,27 +83,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             sharedViewModel.onQueryTextChanged(it.toString())
         }
 
+        handleViewsVisibility()
         supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount > 0){
-                viewTopSpacing.gone()
-                btMenuToggle.setIconResource(R.drawable.ic_baseline_arrow_back_24)
-                btMenuToggle.setOnClickListener {
-                    supportFragmentManager.popBackStack()
-                }
-            }else{
-                viewTopSpacing.show()
-                btMenuToggle.setIconResource(R.drawable.ic_baseline_menu_24)
-                btMenuToggle.setOnClickListener {
-                    drawer_layout.openDrawer(Gravity.LEFT)
-                }
+            handleViewsVisibility()
+        }
+    }
+
+    private fun handleViewsVisibility() {
+        if (supportFragmentManager.backStackEntryCount > 0){
+            materialCardView.setViewMargin(this, 0 , 30, 0 , 0)
+            btMenuToggle.setIconResource(R.drawable.ic_baseline_arrow_back_24)
+            btMenuToggle.setOnClickListener {
+                onBackPressed()
+                supportFragmentManager.popBackStack()
+            }
+        }else{
+            materialCardView.setViewMargin(this, 16 , 60, 16 , 16)
+            btMenuToggle.setIconResource(R.drawable.ic_baseline_menu_24)
+            btMenuToggle.setOnClickListener {
+                drawer_layout.openDrawer(Gravity.LEFT)
             }
         }
     }
 
-    private fun showSearchFragment() {
+    private fun showSearchFragment(fragment: Fragment) {
         supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
-                .replace(R.id.flSearchResult, SearchFragment())
+                .replace(R.id.flSearchResult, fragment)
                 .addToBackStack("")
                 .commit()
     }

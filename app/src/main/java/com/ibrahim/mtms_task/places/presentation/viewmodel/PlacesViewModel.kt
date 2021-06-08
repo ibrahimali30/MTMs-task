@@ -2,6 +2,7 @@ package com.ibrahim.mtms_task.places.presentation.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ibrahim.mtms_task.places.domain.entity.PlacesParams
 import com.ibrahim.mtms_task.model.PlaceUiModel
 import com.ibrahim.mtms_task.places.domain.interactor.GetPlacesUseCase
@@ -19,8 +20,7 @@ class PlacesViewModel @Inject constructor(
 
     val screenState by lazy { MutableLiveData<ScreenState>() }
 
-    var offset: Int = -1
-    fun getSourceLocations(searchQuery: String) {
+    fun getDestinationLocations(searchQuery: String) {
 
         screenState.value = ScreenState.Loading
         val params = PlacesParams(searchQuery)
@@ -34,9 +34,28 @@ class PlacesViewModel @Inject constructor(
             }).addTo(compositeDisposable)
     }
 
+    fun getSourceLocations(name: String = "") {
+        //avoid duplicate
+        screenState.value =
+            ScreenState.Loading
+
+        val db = FirebaseFirestore.getInstance()
+        db.collection("Source").addSnapshotListener { value, error ->
+
+            val response = value?.documents?.map {
+                it.toObject(PlaceUiModel::class.java)
+            }?.filterNotNull()
+
+            handleSuccessResponse(response!!)
+
+            if (error != null)
+                handleErrorResponse(error)
+        }
+
+    }
+
 
     fun handleErrorResponse(it: Throwable) {
-        offset = -1
         screenState.value = ScreenState.ErrorLoadingFromApi(it)
     }
 
