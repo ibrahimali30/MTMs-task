@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.places.presentation.adapter
+package com.ibrahim.mtms_task.places.presentation.view.adapter
 
 
 import android.view.LayoutInflater

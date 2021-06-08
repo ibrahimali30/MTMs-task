@@ -1,15 +1,14 @@
-package com.ibrahim.mtms_task.places.presentation.view
+package com.ibrahim.mtms_task.places.presentation.view.activity
 
 import android.Manifest
-import android.R.attr.*
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -19,11 +18,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.ibrahim.mtms_task.R
-import com.ibrahim.mtms_task.base.extensions.gone
+import com.ibrahim.mtms_task.UserLocationManager
 import com.ibrahim.mtms_task.base.extensions.setViewMargin
-import com.ibrahim.mtms_task.base.extensions.show
-import com.ibrahim.mtms_task.places.presentation.fragment.DestinationSearchFragment
-import com.ibrahim.mtms_task.places.presentation.fragment.SourceSearchFragment
+import com.ibrahim.mtms_task.places.presentation.view.fragment.DestinationSearchFragment
+import com.ibrahim.mtms_task.places.presentation.view.fragment.SourceSearchFragment
 import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -116,18 +114,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        locationManager.askForPermission()
+        val screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels
+        mMap.setPadding(0,screenHeight - 100,0,0)
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        mMap.isMyLocationEnabled = true
     }
+
+
+    @SuppressLint("MissingPermission")
+    private val locationManager = UserLocationManager(this, {
+        mMap.isMyLocationEnabled = true
+    }, {
+        Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show()
+    })
 
 }

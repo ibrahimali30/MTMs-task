@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.places.presentation.fragment
+package com.ibrahim.mtms_task.places.presentation.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ibrahim.mtms_task.R
 import com.ibrahim.mtms_task.model.PlaceUiModel
 import com.ibrahim.mtms_task.places.presentation.viewmodel.PlacesViewModel
-import com.ibrahim.mtms_task.places.presentation.adapter.SearchAdapter
+import com.ibrahim.mtms_task.places.presentation.view.adapter.SearchAdapter
 import com.ibrahim.mtms_task.places.presentation.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*

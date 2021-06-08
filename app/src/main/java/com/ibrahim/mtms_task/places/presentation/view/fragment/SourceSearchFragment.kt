@@ -1,4 +1,4 @@
-package com.ibrahim.mtms_task.places.presentation.fragment
+package com.ibrahim.mtms_task.places.presentation.view.fragment
 
 import com.ibrahim.mtms_task.model.PlaceUiModel
 
