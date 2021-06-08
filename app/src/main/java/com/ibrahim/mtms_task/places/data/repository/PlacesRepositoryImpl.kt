@@ -15,16 +15,14 @@ class PlacesRepositoryImpl @Inject constructor(
     private val placesRemoteDataSource: PlacesRemoteDataSource
 ) : PlacesRepository {
 
-    override fun fetchPlaces(params: PlacesParams): Single<List<PlaceUiModel>> {
-        return placesRemoteDataSource.fetchPlaces(params).map {
+    override fun fetchDestinationPlaces(params: PlacesParams): Single<List<PlaceUiModel>> {
+        return placesRemoteDataSource.fetchDestinationPlaces(params).map {
             it.mapToPlaceUidModel()
         }
     }
 
-    override fun fetchPlacesSubCategories(params: PlacesParams): Single<List<PlaceUiModel>> {
-        return placesRemoteDataSource.fetchPlaces(params).map {
-            it.mapToPlaceUidModel()
-        }
+    override fun fetchSourcePlaces(query: String): Single<List<PlaceUiModel>> {
+        return placesRemoteDataSource.fetchSourcePlaces(query)
     }
 
 

@@ -10,9 +10,9 @@ interface PlacesApiService {
 
     @GET("maps/api/place/textsearch/json")
     fun getPlaces(
-        @Query("query") query:String,
-        @Query("key") apikey:String = PLACES_API_KEY,
-        @Query("radius") radius:Int = 1500
+        @Query("query") query: String,
+        @Query("key") apikey: String,
+        @Query("radius") radius: Int
     ): Single<PlacesResponse>
 
 

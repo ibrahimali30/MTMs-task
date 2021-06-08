@@ -3,6 +3,7 @@ package com.ibrahim.mtms_task.places.presentation.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.ibrahim.mtms_task.places.domain.entity.PlacesParams
 import com.ibrahim.mtms_task.model.PlaceUiModel
 import com.ibrahim.mtms_task.places.domain.interactor.GetPlacesUseCase
@@ -24,7 +25,7 @@ class PlacesViewModel @Inject constructor(
 
         screenState.value = ScreenState.Loading
         val params = PlacesParams(searchQuery)
-        refreshForecastUseCase.fetchPlaces(params)
+        refreshForecastUseCase.fetchDestinationPlaces(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -34,28 +35,23 @@ class PlacesViewModel @Inject constructor(
             }).addTo(compositeDisposable)
     }
 
-    fun getSourceLocations(name: String = "") {
-        //avoid duplicate
-        screenState.value =
-            ScreenState.Loading
+    fun getSourceLocations(query: String) {
 
-        val db = FirebaseFirestore.getInstance()
-        db.collection("Source").addSnapshotListener { value, error ->
+        screenState.value = ScreenState.Loading
 
-            val response = value?.documents?.map {
-                it.toObject(PlaceUiModel::class.java)
-            }?.filterNotNull()
-
-            handleSuccessResponse(response!!)
-
-            if (error != null)
-                handleErrorResponse(error)
-        }
+        refreshForecastUseCase.fetchSourcePlaces(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                handleSuccessResponse(it)
+            }, {
+                handleErrorResponse(it)
+            }).addTo(compositeDisposable)
 
     }
 
 
-    fun handleErrorResponse(it: Throwable) {
+    private fun handleErrorResponse(it: Throwable) {
         screenState.value = ScreenState.ErrorLoadingFromApi(it)
     }
 
