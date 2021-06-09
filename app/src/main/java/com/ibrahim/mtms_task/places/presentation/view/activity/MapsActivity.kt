@@ -4,8 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.ibrahim.mtms_task.R
 import com.ibrahim.mtms_task.UserLocationManager
+import com.ibrahim.mtms_task.base.extensions.hideKeyboard
 import com.ibrahim.mtms_task.base.extensions.setViewMargin
 import com.ibrahim.mtms_task.places.presentation.view.fragment.DestinationSearchFragment
 import com.ibrahim.mtms_task.places.presentation.view.fragment.SourceSearchFragment
@@ -38,7 +42,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+//        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -48,7 +52,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         initViews()
         initObservers()
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window: Window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.setStatusBarColor(Color.TRANSPARENT)
+        }
     }
 
     private fun initObservers() {
@@ -63,6 +72,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initViews() {
+
+        btRequest.setOnClickListener {
+            hideSearchViews()
+        }
 
         etSourceLocation.setOnTouchListener { v, event ->
             showSearchFragment(SourceSearchFragment())
@@ -87,13 +100,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun hideSearchViews() {
+        hideKeyboard()
+        etSourceLocation.clearFocus()
+        etDestinationLocation.clearFocus()
+        supportFragmentManager.popBackStack()
+    }
+
     private fun handleViewsVisibility() {
         if (supportFragmentManager.backStackEntryCount > 0){
             materialCardView.setViewMargin(this, 0 , 30, 0 , 0)
             btMenuToggle.setIconResource(R.drawable.ic_baseline_arrow_back_24)
             btMenuToggle.setOnClickListener {
-                onBackPressed()
-                supportFragmentManager.popBackStack()
+                hideSearchViews()
             }
         }else{
             materialCardView.setViewMargin(this, 16 , 60, 16 , 16)

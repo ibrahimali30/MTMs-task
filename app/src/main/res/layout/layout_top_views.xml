@@ -7,7 +7,8 @@
     android:id="@+id/topViewsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
 
 <!--    <View-->
 <!--        android:id="@+id/viewTopSpacing"-->
@@ -40,8 +41,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btMenuToggle"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:backgroundTint="@color/white"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
@@ -51,7 +52,7 @@
                     app:icon="@drawable/ic_baseline_menu_24"
                     app:iconGravity="textStart"
                     app:iconPadding="0dp"
-                    app:iconSize="32dp"
+                    app:iconSize="28dp"
                     app:iconTint="@color/black"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
 
@@ -63,7 +64,7 @@
                     android:background="@drawable/radius"
                     android:hint="Your Location"
                     android:paddingVertical="8dp"
-                    android:paddingStart="16dp" />
+                    android:paddingHorizontal="16dp" />
 
                 <EditText
                     android:id="@+id/etDestinationLocation"
@@ -73,7 +74,7 @@
                     android:background="@drawable/radius"
                     android:hint="Destination"
                     android:paddingVertical="8dp"
-                    android:paddingStart="16dp" />
+                    android:paddingHorizontal="16dp" />
 
 
             </LinearLayout>
@@ -90,15 +91,5 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="REQUEST RD"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

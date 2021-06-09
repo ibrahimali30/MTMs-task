@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MTMstask">
+        android:theme="@style/MyApplication">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -20,7 +20,8 @@
 
         <activity
             android:name="com.ibrahim.mtms_task.places.presentation.view.activity.MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
