@@ -2,6 +2,7 @@ package com.ibrahim.mtms_task.places.data.source.remote
 
 import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ibrahim.mtms_task.base.SOURCE_COLLECTION
 import com.ibrahim.mtms_task.model.PlaceUiModel
 import io.reactivex.Single
 import com.ibrahim.mtms_task.places.domain.entity.PlacesParams
@@ -26,7 +27,7 @@ class PlacesRemoteDataSource @Inject constructor(
      fun fetchSourcePlaces(query: String): Single<List<PlaceUiModel>> {
          return Single.create {emitter->
              val db = FirebaseFirestore.getInstance()
-             db.collection("Source")
+             db.collection(SOURCE_COLLECTION)
                  .orderBy("name")
                  .startAt(query)
                  .endAt(query + "\uf8ff")

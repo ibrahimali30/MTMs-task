@@ -1,6 +1,7 @@
 package com.ibrahim.mtms_task.places.presentation.di
 
 import com.google.gson.GsonBuilder
+import com.ibrahim.mtms_task.base.GOOGLE_PLACES_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +27,7 @@ class NetworkModule {
         val gson = GsonBuilder().enableComplexMapKeySerialization()
             .setLenient()
             .create()
-        builder.baseUrl("https://maps.googleapis.com/")
+        builder.baseUrl(GOOGLE_PLACES_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         builder.client(okHttpClient)
