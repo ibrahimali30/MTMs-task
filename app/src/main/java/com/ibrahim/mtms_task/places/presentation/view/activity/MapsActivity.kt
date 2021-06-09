@@ -77,7 +77,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initViews() {
 
         btRequest.setOnClickListener {
-            if (sourceLocation != null || destinationLocation != null) {
+            if (sourceLocation != null && destinationLocation != null) {
                 getClosestDriver()
             }else{
                 showAlertDialog("", "Select source and destination location")
